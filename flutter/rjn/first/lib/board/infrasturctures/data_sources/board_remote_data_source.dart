@@ -68,6 +68,19 @@ class BoardRemoteDataSource {
     }
   }
 
+  Future<Board?> fetchBoard(int boardId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/board/read/$boardId'));
+      
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return Board.fromJson(data);
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
   int parseInt(dynamic value) {
     if (value is String) {
       return int.tryParse(value) ?? 0;

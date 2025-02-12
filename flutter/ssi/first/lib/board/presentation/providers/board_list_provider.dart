@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../../domain/entity/board.dart';
-import '../../domain/usecases/list/ListBoardUseCase.dart';
+import '../../domain/usecases/list/list_board_usecase.dart';
 
 class BoardListProvider with ChangeNotifier {
   final ListBoardUseCase listBoardUseCase;
@@ -42,5 +42,19 @@ class BoardListProvider with ChangeNotifier {
 
     isLoading = false;
     notifyListeners();
+  }
+
+  void changePage(int page, int perPage) {
+    listBoard(page, perPage);
+  }
+
+  void updateBoard(Board updatedBoard) {
+    final index = boardList.indexWhere((board) => board.id == updatedBoard.id);
+    print('BoardListProvider updateBoard() boards: $boardList');
+    if (index != -1) {
+      print('BoardListProvider updateBoard() update list');
+      boardList[index] = updatedBoard;
+      notifyListeners();
+    }
   }
 }

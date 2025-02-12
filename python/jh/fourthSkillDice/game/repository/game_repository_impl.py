@@ -5,7 +5,7 @@ from game.repository.game_repository import GameRepository
 class GameRepositoryImpl(GameRepository):
     __instance = None
 
-    __game = None
+    __game = None  # Game 클리스의 인스턴스를 저장하기 위해(계층을 연결하기 위해)사용 -> repository가 entity를 관리
 
     def __new__(cls):
         if cls.__instance is None:

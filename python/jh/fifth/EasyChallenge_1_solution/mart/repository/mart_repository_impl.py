@@ -29,5 +29,5 @@ class MartRepositoryImpl(MartRepository):
         return self.__mart.getFruitMap()
 
     def update(self, fruitName, quantity):
-        fruitMap = self.mapList()
+        #fruitMap = self.mapList()
         self.__mart.updateFruit(fruitName, quantity)

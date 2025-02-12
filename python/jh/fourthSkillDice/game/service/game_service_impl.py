@@ -42,7 +42,7 @@ class GameServiceImpl(GameService):
     def printCurrentStatus(self):
         game = self.__gameRepository.getGame()
         playerDiceGameMap = game.getPlayerDiceGameMap()
-        playerDiceNumberList = []
+        playerDiceNumberList = [] # 주사위 번호 출력을 위해 잠시 거쳐 가는 용도
 
         for playerId, diceIdList in playerDiceGameMap.items():
             player = self.__playerRepository.findById(playerId)
@@ -64,7 +64,7 @@ class GameServiceImpl(GameService):
             print(f"playerIndex: {playerIndex}")
             # 기존에는 단순히 굴리기만 했음
             # 혹은 굴리고 Dice 객체 자체를 리턴했음
-            # 그러나 Player가 어떤 Dice 객체를 소유하고 있는지 판단할 필요가 생겼음
+            # 그러나 Player가 어떤 Dice 객체를 소유하고 있는지 판단할 필요가 생겼음(스킬 부여 때문)
             # 그러므로 rollDice() 이후 생성된 주사위의 고유한 번호(id)를 리턴시켰음
             diceId = self.__diceRepository.rollDice() # rollDice()하고 diceId를 return
             diceIdList.append(diceId)
@@ -76,9 +76,9 @@ class GameServiceImpl(GameService):
 
             playerIndexList.append(playerIndex + 1)
 
-            # Player 엔티티에 setDiceId를 구현하여 획득한 주사위의 번호를 설정함
+            # Player 엔티티에 addDiceId를 구현하여 획득한 주사위의 번호를 설정함
             # 고로 특정 Player가 특정 Dice의 소유권을 확보하게 되었음
-            indexedPlayer.addDiceId(diceId)
+            indexedPlayer.addDiceId(diceId) # service 계층이 entity 계층을 관리
 
         for player in self.__playerRepository.acquirePlayerList():
             print(f"{player}")
@@ -153,7 +153,7 @@ class GameServiceImpl(GameService):
         playerDiceGameMap = game.getPlayerDiceGameMap()
 
         playerDiceSum = {}
-
+           # 플레이어 아이디, 플레이어의 diceId 리스트
         for playerId, diceIdList in playerDiceGameMap.items():
             diceSum = 0
 
@@ -180,6 +180,7 @@ class GameServiceImpl(GameService):
 
         if secondDiceNumber == DiceSkill.DEATH_SHOT.value:
             self.__deathShot()
+
           # __applySkill()을 위한 조건을 검사하는 함수 -> diceId가 두개 아상이어야 함
     def applySkill(self):
         gamePlayerCount = self.__gameRepository.getGamePlayerCount()
@@ -191,7 +192,7 @@ class GameServiceImpl(GameService):
 
             if indexedPlayerDiceIdListLength < 2:
                 continue
-                        # diceId가 두개인 애들만 반복문을 넘어옴
+                        # diceId가 두개인 애들만 반복문을 넘어옴(스킬 적용된 애들)
             indexedPlayerSecondDiceId = indexedPlayerDiceIdList[1] # 0부터 카운트 돼서 1은 2번째 dice
             secondDice = self.__diceRepository.findById(indexedPlayerSecondDiceId)
 
@@ -217,12 +218,15 @@ class GameServiceImpl(GameService):
 
 
         maxDiceSum = max(playerDiceSum.values())
+        # 리스트 컴프리핸션 사용
+        maxDicePlayerList = [playerId for playerId, diceSum in playerDiceSum.items()
+                             if diceSum == maxDiceSum]
+
+        # 반복문 사용
         # maxDicePlayerIdList = []
         # for playerId, diceSum in playerDiceSum.items():
         #     if diceSum == maxDiceSum:
         #         maxDicePlayerIdList.append(playerId)
-        maxDicePlayerList = [playerId for playerId, diceSum in playerDiceSum.items()
-                             if diceSum == maxDiceSum]
         
         if len(maxDicePlayerList) > 1:
             print("무승부")

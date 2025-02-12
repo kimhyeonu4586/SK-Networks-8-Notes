@@ -1,9 +1,8 @@
-
+import 'package:first/board/board_module.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../board/board_module.dart';
 import '../kakao_authentication/kakao_auth_module.dart';
 import '../simple_chat/simple_chat_module.dart';
 import 'app_bar_action.dart';

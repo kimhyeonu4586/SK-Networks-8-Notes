@@ -10,12 +10,12 @@ fruitList = martService.fruitMapList()
 print(f"현재 저희 매장에 남은 과일은: {fruitList}")
 
 customerService = CustomerServiceImpl.getInstance()
-geniusPYDId = customerService.createCustomer('code_man')
+customerName = customerService.createCustomer('code_man')
 
 orderService = OrderServiceImpl.getInstance()
-orderService.buyFruit(Fruit.APPLE, 2, geniusPYDId)
+orderService.buyFruit(Fruit.APPLE, 2, customerName)
 
 fruitList = martService.fruitMapList()
 print(f"주문 이후 매장에 남은 과일은: {fruitList}")
 
-orderService.orderList(geniusPYDId)
+orderService.orderList(customerName)

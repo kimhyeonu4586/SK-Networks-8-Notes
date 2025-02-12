@@ -6,7 +6,7 @@ class Fruit(Enum):
 
     def __init__(self, label, value):
         self.label = label
-        self._value_ = value
+        self.value = value
 
     def __str__(self):
         return self.label

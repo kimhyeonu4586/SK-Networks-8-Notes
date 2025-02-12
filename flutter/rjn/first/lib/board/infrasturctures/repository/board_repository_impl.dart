@@ -27,4 +27,14 @@ class BoardRepositoryImpl implements BoardRepository {
       throw Exception('게시물 생성 실패');
     }
   }
+
+  @override
+  Future<Board?> readBoard(int id) async {
+    try {
+      final board = await boardRemoteDataSource.fetchBoard(id);
+      return board;
+    } catch (e) {
+      throw Exception("게시물 읽기 실패");
+    }
+  }
 }

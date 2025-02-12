@@ -12,7 +12,8 @@ class Game:
 
     def setPlayerIndexListToMap(self, playerIndexList, diceIdList):
                                         # 딕셔너리 컴프리핸션 구조 {key: value for key, value in 반복 가능 객체}
-                                        # index를 key로,  diceId를 요소로 갖는 리스트를 value 로 가짐
+                                        # index를 key로,  diceId를 리스트 형태의 value 로 가짐
+                                                                        # zip()은 반복 가능 객체들을 튜플로 반환
         self.__playerDiceGameMap = { index: [diceId] for index, diceId in zip(playerIndexList, diceIdList) }
         print(f"self.__playerDiceGameMap: {self.__playerDiceGameMap}")
 

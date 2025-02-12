@@ -51,12 +51,12 @@ class BoardCreatePage extends StatelessWidget {
 
                     if (board != null) {
                       print("게시물 등록 완료");
-                      // Navigator.pushReplacement(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => BoardModule.provideBoardReadPage(board.id),
-                      //   )
-                      // );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BoardModule.provideBoardReadPage(board.id),
+                        )
+                      );
                     }
                   },
                   child: Text('등록'),

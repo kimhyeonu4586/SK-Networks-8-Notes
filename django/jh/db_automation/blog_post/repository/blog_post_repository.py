@@ -16,3 +16,7 @@ class BlogPostRepository(ABC):
     @abstractmethod
     def findById(self, boardId):
         pass
+
+    @abstractmethod
+    def deleteById(self, boardId):
+        pass

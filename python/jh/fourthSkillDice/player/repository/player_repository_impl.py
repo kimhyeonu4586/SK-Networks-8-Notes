@@ -5,7 +5,7 @@ from player.repository.player_repository import PlayerRepository
 class PlayerRepositoryImpl(PlayerRepository):
 
     __instance = None
-    __playerList = [] # player 객체가 둘어감
+    __playerList = [] # player 객체가 둘어감, repository 계충이 entity 계층을 관리
 
 
     def __new__(cls):

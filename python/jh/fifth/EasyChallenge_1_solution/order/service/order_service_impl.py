@@ -39,7 +39,7 @@ class OrderServiceImpl(OrderService):
         if isValid is True:
             print("주문이 유효합니다")
             self.__martRepository.update(fruitName, -fruitCount)
-            self.__orderRepository.create(fruitName, fruitCount, customerId)
+            self.__orderRepository.create(fruitName, fruitCount, customerId) # order 객체 생성
             return
 
         print("주문이 유효하지 않습니다")

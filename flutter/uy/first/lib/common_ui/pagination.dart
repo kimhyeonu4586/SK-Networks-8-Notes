@@ -1,14 +1,17 @@
 import 'package:first/common_ui/page_button.dart';
 import 'package:flutter/cupertino.dart';
+
 class Pagination extends StatelessWidget {
   final int currentPage;
   final int totalPages;
   final Function(int) onPageChanged;
+
   Pagination({
     required this.currentPage,
     required this.totalPages,
     required this.onPageChanged
   });
+
   @override
   Widget build(BuildContext context) {
     return Padding(

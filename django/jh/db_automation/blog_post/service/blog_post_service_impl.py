@@ -85,3 +85,53 @@ class BlogPostServiceImpl(BlogPostService):
             }
 
         return None
+
+    def requestUpdate(self, id, title, accountId):
+        try:
+            account = self.__accountRepository.findById(accountId)
+            accountProfile = self.__accountProfileRepository.findByAccount(account)
+
+            blogPost = self.__blogPostRepository.findById(id)
+
+            # 게시글 작성자와 요청한 사용자가 동일한지 확인
+            if blogPost.writer.id != accountProfile.id:
+                raise ValueError("You are not authorized to modify this post.")
+
+            # 제목 업데이트
+            blogPost.title = title
+
+            # 게시글 저장 (수정)
+            updatedBlogPost = self.__blogPostRepository.save(blogPost)
+
+            # 수정된 게시글 반환
+            return {
+                "id": updatedBlogPost.id,
+                "title": updatedBlogPost.title,
+                "content": updatedBlogPost.content,
+                "writerNickname": updatedBlogPost.writer.nickname,  # 작성자의 닉네임
+                "createDate": updatedBlogPost.create_date.strftime("%Y-%m-%d %H:%M"),
+            }
+
+        except BlogPost.DoesNotExist:
+            raise ValueError(f"BlogPost with ID {updatedBlogPost} does not exist.")
+        except Exception as e:
+            raise Exception(f"Error while modifying the post: {str(e)}")
+
+    def requestDelete(self, id, accountId):
+        try:
+            account = self.__accountRepository.findById(accountId)
+            accountProfile = self.__accountProfileRepository.findByAccount(account)
+
+            blogPost = self.__blogPostRepository.findById(id)
+            if not blogPost:
+                raise ValueError(f"BlogPost with ID {id} does not exist.")
+
+            if blogPost.writer.id != accountProfile.id:
+                raise ValueError("You are not authorized to modify this post.")
+
+            # 게시글 삭제 요청
+            success = self.__blogPostRepository.deleteById(id)
+            return success
+
+        except Exception as e:
+            raise Exception(f"게시글 삭제 중 오류 발생: {str(e)}")

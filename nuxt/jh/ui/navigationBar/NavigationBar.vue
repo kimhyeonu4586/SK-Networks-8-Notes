@@ -35,6 +35,11 @@
             <span>게임 소프트웨어</span>
         </v-btn>
 
+        <v-btn text @click="goToBlog" class="btn-text">
+            <v-icon left>mdi-post-outline</v-icon>
+            <span>블로그</span>
+        </v-btn>
+
         <v-btn text @click="goToDataAnalysis" class="btn-text">
             <v-icon left>mdi-chart-line"></v-icon>
             <span>데이터 분석</span>
@@ -87,6 +92,8 @@ const goToGameSoftwareList = () => {
 const goToBoardList = () => {
     router.push('/board/list') // 게시판 페이지로 연결
 }
+
+const goToBlog = () => router.push('/blog-post/list');
 
 const goToCart = () => {
     router.push('/cart/list'); // 카트 페이지로 이동

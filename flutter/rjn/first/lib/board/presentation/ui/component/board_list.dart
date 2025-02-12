@@ -1,4 +1,8 @@
+import 'package:first/board/board_module.dart';
+import 'package:first/board/presentation/providers/board_list_provider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'card_item.dart';
 
@@ -25,7 +29,16 @@ class BoardList extends StatelessWidget {
           nickname: board.nickname,
           createDate: board.createDate,
           onTap: () async {
-            print("읽기 연산 구현");
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BoardModule.provideBoardReadPage(board.id)
+              ),
+            );
+
+            if (result != null) {
+              final boardListProvider = Provider.of<BoardListProvider>(context, listen: false);
+            }
           }
         );
       })

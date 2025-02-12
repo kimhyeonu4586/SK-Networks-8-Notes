@@ -10,6 +10,7 @@ from game.service.game_service import GameService
 class GameServiceImpl(GameService):
     __instance = None
 
+
     def __new__(cls):
         if cls.__instance is None:
             cls.__instance = super().__new__(cls)
@@ -20,6 +21,7 @@ class GameServiceImpl(GameService):
 
         return cls.__instance
 
+
     @classmethod
     def getInstance(cls):
         if cls.__instance is None:
@@ -27,11 +29,13 @@ class GameServiceImpl(GameService):
 
         return cls.__instance
 
+
     def __createGamePlayer(self):
         gamePlayerCount = self.__gameRepository.getGamePlayerCount()
 
         for _ in range(gamePlayerCount):
             self.__playerRepository.createName()
+
 
     def startDiceGame(self):
         print("startDiceGame() called!")
@@ -39,11 +43,11 @@ class GameServiceImpl(GameService):
 
         self.__createGamePlayer()
 
+
     def rollFirstDice(self):
         gamePlayerCount = self.__gameRepository.getGamePlayerCount()
         playerIndexList = []
         diceIdList = []
-
 
         for playerIndex in range(gamePlayerCount):
             print(f"playerIndex: {playerIndex}")
@@ -76,6 +80,7 @@ class GameServiceImpl(GameService):
                 skillApliedPlayerList.append(playerIndex + 1)
 
         return skillApliedPlayerList
+
 
     def rollSecondDice(self):
         skillAppliedPlayerIndexList = self.__checkSkillAppliedPlayerIndexList()
@@ -128,7 +133,7 @@ class GameServiceImpl(GameService):
                 firstDice.setDiceNumber(diceNumber - 2)
 
 
-    def __deathShot(self):
+    def playerDiceSumMap(self):
         game = self.__gameRepository.getGame()
         playerDiceGameMap = game.getPlayerDiceGameMap()
 
@@ -145,11 +150,21 @@ class GameServiceImpl(GameService):
 
             playerDiceSum[playerId] = diceSum
 
-        for playerId, diceSum in playerDiceSum.items():
+        return playerDiceSum
+
+
+    def printPlayerDiceSum(self):
+        playerDiceSumMap = self.playerDiceSumMap()
+        for playerId, diceSum in playerDiceSumMap.items():
             print(f"Player: {playerId} Accumulation Score: {diceSum}")
+
+
+    def __deathShot(self):
+        self.playerDiceSumMap()
 
         deathShotTargetPlayerId = int(input("Choose Player ID that you want Death-Shot: "))
         self.__gameRepository.deletePlayer(deathShotTargetPlayerId)
+
 
     def __applySkill(self, playerIndex, secondDice):
         secondDiceNumber = secondDice.getDiceNumber()
@@ -160,6 +175,7 @@ class GameServiceImpl(GameService):
 
         if secondDiceNumber == DiceSkill.DEATH_SHOT.value:
             self.__deathShot()
+
 
     def applySkill(self):
         gamePlayerCount = self.__gameRepository.getGamePlayerCount()
@@ -177,11 +193,11 @@ class GameServiceImpl(GameService):
 
             self.__applySkill(playerIndex, secondDice)
 
+
     def printCurrentStatus(self):
         game = self.__gameRepository.getGame()
         playerDiceGameMap = game.getPlayerDiceGameMap()
         playerDiceNumberList = []
-
 
         for playerId, diceIdList in playerDiceGameMap.items():
             player = self.__playerRepository.findByPlayerId(playerId)
@@ -200,29 +216,17 @@ class GameServiceImpl(GameService):
 
     def checkWinner(self):
         print("checkWinner() called!")
-        game = self.__gameRepository.getGame()
-        playerDiceGameMap = game.getPlayerDiceGameMap()
 
-        playerDiceSum = {}
+        playerDiceSumMap = self.playerDiceSumMap()
 
-        for playerId, diceIdList in playerDiceGameMap.items():
-
-            diceSum = 0
-            for diceId in diceIdList:
-                dice = self.__diceRepository.findByDiceId(diceId)
-
-                if dice:
-                    diceSum += dice.getDiceNumber()
-
-            playerDiceSum[playerId] = diceSum
-
-        maxDiceSum = max(playerDiceSum.values())
-        # maxDicePlayerIdList = [playerId for playerId, diceSum in playerDiceSum.items()
-        #                      if diceSum == maxDiceSum]
+        maxDiceSum = max(playerDiceSumMap.values())
         maxDicePlayerIdList = []
-        for playerId, diceSum in playerDiceSum.items():
+        for playerId, diceSum in playerDiceSumMap.items():
             if diceSum == maxDiceSum:
                 maxDicePlayerIdList.append(playerId)
+
+        # maxDicePlayerIdList = [playerId for playerId, diceSum in playerDiceSum.items()
+        #                      if diceSum == maxDiceSum]
 
         if len(maxDicePlayerIdList) > 1:
             print("Draw")

@@ -1,4 +1,4 @@
-import { Order } from "./orderStore";
+import { Order } from "./orderType";
 
 export const orderState = () => ({
     orderList: [] as Order[],

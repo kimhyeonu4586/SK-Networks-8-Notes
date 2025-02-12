@@ -1,3 +1,4 @@
+import 'package:first/board/board_module.dart';
 import 'package:first/common_ui/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +87,29 @@ class _BoardListPageState extends State<BoardListPage> {
                           );
                         }
                     )
-                )
+                ),
+                Positioned(
+                    top: statusBarHeight,
+                    right: 16,
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BoardModule.provideBoardCreatePage(),
+                            )
+                        ).then((_) {
+                          final boardListProvider = Provider.of<BoardListProvider>(
+                              context, listen: false
+                          );
+
+                          boardListProvider.listBoard(1, 6);
+                        });
+                      },
+                      child: Icon(Icons.add),
+                      tooltip: '게시물 생성',
+                    )
+                ),
               ],
             )
         )

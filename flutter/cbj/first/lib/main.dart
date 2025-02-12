@@ -21,7 +21,6 @@ import 'kakao_authentication/domain/usecase/request_user_token_usecase_impl.dart
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  print(await KakaoSdk.origin);
 
   await dotenv.load();
 

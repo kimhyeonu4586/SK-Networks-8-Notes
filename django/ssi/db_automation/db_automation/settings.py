@@ -65,7 +65,8 @@ INSTALLED_APPS = [
     'payments',
     'orders',
     'board',
-    #'image_gallery',
+    'image_gallery',
+    'blog_post',
 ]
 
 MIDDLEWARE = [

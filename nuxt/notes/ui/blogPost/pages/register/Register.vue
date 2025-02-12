@@ -62,24 +62,24 @@ const slugify = (str: string) => {
 };
 
 // 🚀 S3 업로드 (HTML 압축 적용)
-const uploadToS3 = async (content: string, title: string) => {
+const uploadToS3 = async (content: string) => {
     const s3Client = createAwsS3Instance();
-    const uniqueId = uuidv4(); // 고유 ID 생성
-    const filename = `${slugify(title)}-${uniqueId}.html`; // title-uuid.html 형식 유지
+    const uniqueId = uuidv4(); // 고유 UUID 생성
+    const filename = `${uniqueId}.html`; // UUID만 사용
 
     const params = {
         Bucket: config.public.AWS_BUCKET_NAME,
-        Key: `blog-post/${filename}`, // 개선된 파일명 적용
-        Body: content, // 여기에 HTML 문자열을 그대로 전달
+        Key: `blog-post/${filename}`, // UUID 기반 파일명
+        Body: content,
         ContentType: "text/html",
     };
 
-    console.log("📝 S3 Upload Params:", params); // 업로드 전 확인 로그
+    console.log("📝 S3 Upload Params:", params);
 
     try {
-        const data = await s3Client.send(new PutObjectCommand(params));
-        console.log("✅ Content uploaded to S3:", data);
-        return filename; // "title-uuid.html" 반환
+        await s3Client.send(new PutObjectCommand(params));
+        console.log("✅ Content uploaded to S3:", filename);
+        return filename; // UUID.html 반환
     } catch (err) {
         console.error("❌ Error uploading content to S3", err);
         throw new Error("S3 업로드 실패");
@@ -103,24 +103,22 @@ const submitPost = async () => {
         }
 
         const contentHtmlString = quillInstance.root.innerHTML;
-        console.log("📄 HTML content to upload:", contentHtmlString);
-
         if (!contentHtmlString) {
             console.error("❌ Failed to extract content from QuillEditor.");
             return;
         }
 
-        // HTML 압축 적용 (await 사용)
-        const compressedHTML = await compressHTML(contentHtmlString);  // await 추가
+        // HTML 압축 적용
+        const compressedHTML = await compressHTML(contentHtmlString);
         console.log("📄 압축된 HTML:", compressedHTML);
 
         try {
-            const filename = await uploadToS3(compressedHTML, title.value);
-            console.log("✅ File uploaded successfully, key:", filename);
+            const filename = await uploadToS3(compressedHTML);
+            console.log("✅ File uploaded successfully:", filename);
 
             await blogPostStore.requestRegisterPost({
                 title: title.value,
-                content: filename
+                content: filename, // UUID.html로 저장
             });
 
             alert("블로그 포스트가 등록되었습니다!");

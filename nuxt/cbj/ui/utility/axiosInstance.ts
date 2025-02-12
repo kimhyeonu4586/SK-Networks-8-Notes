@@ -28,5 +28,3 @@ export function createAxiosInstances() {
 
     return { djangoAxiosInstance, fastapiAxiosInst };
 }
-
-//axios가 하는 일은 서버에 요청하는 일

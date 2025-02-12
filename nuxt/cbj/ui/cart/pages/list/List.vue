@@ -82,7 +82,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useCartStore } from "~/cart/stores/cartStore"; // cartStore를 import
-import { useOrderStore } from "~/order/stores/orderState";
+import { useOrderStore } from "~/order/stores/orderStore";
 
 const selectedItems = ref([]);
 const isCheckoutDialogVisible = ref(false);

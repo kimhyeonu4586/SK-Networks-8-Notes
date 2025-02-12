@@ -14,3 +14,7 @@ class BlogPostService(ABC):
     @abstractmethod
     def requestRead(self, id):
         pass
+
+    @abstractmethod
+    def requestDelete(self, boardId, accountId):
+        pass
