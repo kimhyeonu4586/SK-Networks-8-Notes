@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'orders',
     'board',
     'image_gallery',
+    'blog_post',
 ]
 
 

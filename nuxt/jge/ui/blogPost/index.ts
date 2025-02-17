@@ -16,13 +16,23 @@ export default defineNuxtModule({
                 path: '/blog-post/list',
                 file: resolve(themeDir, 'blogPost/pages/list/List.vue'),
             });
-        });
 
-        nuxt.hook('pages:extend', (pages) => {
             pages.push({
                 name: 'blogPostRegister',
                 path: '/blog-post/register',
                 file: resolve(themeDir, 'blogPost/pages/register/Register.vue'),
+            });
+
+            pages.push({
+                name: 'blogPostRead',
+                path: '/blog-post/read/:id',
+                file: resolve(themeDir, 'blogPost/pages/read/Read.vue'),
+            });
+
+            pages.push({
+                name: 'blogPostUpdate',
+                path: '/blog-post/update/:id',
+                file: resolve(themeDir, 'blogPost/pages/update/Update.vue'),
             });
         });
 

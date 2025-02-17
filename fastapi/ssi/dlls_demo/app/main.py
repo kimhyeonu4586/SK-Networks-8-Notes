@@ -13,7 +13,7 @@ from hyper_parameter.controller.hyper_parameter_controller import hyperParameter
 from gradient_descent.controller.gradient_descent_controller import gradientDescentRouter
 from principal_component_analysis.controller.pca_controller import principalComponentAnalysisRouter
 from convolution_neural_network.controller.cnn_controller import convolutionNeuralNetworkRouter
-
+from openai_basic.controller.openai_basic_controller import openAiBasicRouter
 
 load_dotenv()
 
@@ -30,6 +30,7 @@ app.include_router(gradientDescentRouter)
 app.include_router(hyperParameterRouter)
 app.include_router(principalComponentAnalysisRouter)
 app.include_router(convolutionNeuralNetworkRouter)
+app.include_router(openAiBasicRouter)
 
 if __name__ == "__main__":
     uvicorn.run(app, host=os.getenv('HOST'), port=int(os.getenv('FASTAPI_PORT')))

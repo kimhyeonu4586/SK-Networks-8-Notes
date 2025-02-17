@@ -2,6 +2,7 @@ from django.db import IntegrityError
 
 from blog_post.entity.blog_post import BlogPost
 from blog_post.repository.blog_post_repository import BlogPostRepository
+from utility.s3_client import S3Client
 
 
 class BlogPostRepositoryImpl(BlogPostRepository):
@@ -24,6 +25,15 @@ class BlogPostRepositoryImpl(BlogPostRepository):
         totalItems = BlogPost.objects.count()
 
         return blogPostList, totalItems
+
+    def uploadToS3(self, fileContent: str, filename: str):
+        try:
+            s3Client = S3Client.getInstance()  # 싱글턴 인스턴스 사용
+            fileUrl = s3Client.upload_file(fileContent, filename)  # 파일 업로드
+            return fileUrl
+
+        except Exception as e:
+            raise Exception(f"S3 업로드 실패: {str(e)}")
 
     def save(self, blog_post: BlogPost) -> BlogPost:
         blog_post.save()

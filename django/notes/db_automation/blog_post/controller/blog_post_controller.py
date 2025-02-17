@@ -27,6 +27,20 @@ class BlogPostController(viewsets.ViewSet):
             "totalPages": totalPages  # 전체 페이지 수
         }, status=status.HTTP_200_OK)
 
+    def requestUploadBlogPost(self, request):
+        fileContent = request.data.get('content')
+        if not fileContent:
+            return JsonResponse({'error': '파일을 제공해야 합니다.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        print(f"fileContent: {fileContent}")
+
+        try:
+            file_url = self.blogPostService.requestUpload(fileContent)
+            return JsonResponse({'url': file_url}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return JsonResponse({'error': f'오류 발생: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     def requestCreateBlogPost(self, request):
         postRequest = request.data
         print("📥 받은 데이터:", postRequest)

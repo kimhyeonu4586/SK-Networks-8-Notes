@@ -85,4 +85,3 @@ class KMeansRepositoryImpl(KMeansRepository):
         dataFrame['Cluster'] = kmeans.fit_predict(scaledX)
 
         return kmeans, dataFrame
-    

@@ -26,7 +26,8 @@ urlpatterns = [
     path("car/", include('car.urls')),
     path("car-registration/", include('car_registration.urls')),
     path("car-business-pricing/", include('car_business_pricing.urls')),
-    path("pandas-basic/", include('pandas_basic.urls')),
+
+    path("blog-post/", include('blog_post.urls'))path("pandas-basic/", include('pandas_basic.urls')),
     path("excel-basic/", include('excel_basic.urls')),
     path("kakao-oauth/", include('kakao_authentication.urls')),
     path("account/", include('account.urls')),
@@ -39,6 +40,5 @@ urlpatterns = [
     path("payments/", include('payments.urls')),
     path("orders/", include('orders.urls')),
     path("board/", include('board.urls')),
-    path("image-gallery/", include('image_gallery.urls')),
-    path("blog-post/", include('blog_post.urls')),
+    path("image-gallery/", include('image_gallery.urls')),,
 ]

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../../domain/entity/board.dart';
-import '../../domain/usecases/list/ListBoardUseCase.dart';
+import '../../domain/usecases/list/list_board_use_case.dart';
 
 class BoardListProvider with ChangeNotifier {
   final ListBoardUseCase listBoardUseCase;
@@ -17,7 +17,7 @@ class BoardListProvider with ChangeNotifier {
   BoardListProvider({
     required this.listBoardUseCase
   });
-  
+
   // Nuxt에서 Action에서 사용했던 Promise와 같은 역할임
   Future<void> listBoard(int page, int perPage) async {
     if (isLoading) return;
@@ -42,5 +42,19 @@ class BoardListProvider with ChangeNotifier {
 
     isLoading = false;
     notifyListeners();
+  }
+
+  void changePage(int page, int perPage) {
+    listBoard(page, perPage);
+  }
+
+  void updateBoard(Board updatedBoard) {
+    final index = boardList.indexWhere((board) => board.id == updatedBoard.id);
+    print('BoardListProvider updateBoard() boards: $boardList');
+    if (index != -1) {
+      print('BoardListProvider updateBoard() update list');
+      boardList[index] = updatedBoard;
+      notifyListeners();
+    }
   }
 }

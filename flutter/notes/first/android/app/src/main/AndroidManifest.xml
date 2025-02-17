@@ -3,6 +3,12 @@
         android:label="first"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <!-- 🔹 S3 TransferService 추가 -->
+        <service
+            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
