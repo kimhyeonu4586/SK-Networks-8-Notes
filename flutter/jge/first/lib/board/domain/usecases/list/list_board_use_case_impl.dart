@@ -12,7 +12,7 @@ class ListBoardUseCaseImpl implements ListBoardUseCase {
   Future<BoardListResponse> call(int page, int perPage) async {
     try {
       final BoardListResponse response =
-      await boardRepository.listBoard(page, perPage);
+        await boardRepository.listBoard(page, perPage);
 
       return response;
     } catch (e) {

@@ -16,8 +16,8 @@ class HomePage extends StatelessWidget {
         body: Center(
             child: Text(
               kakaoAuthProvider.isLoggedIn
-                  ? 'Welcome to HomePage'
-                  : "Use after login",
+                ? 'Welcome to HomePage'
+                : "Use after login",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             )

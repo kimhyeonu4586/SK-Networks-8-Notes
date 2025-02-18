@@ -8,9 +8,17 @@ class BlogPostService(ABC):
         pass
 
     @abstractmethod
+    def requestUploadToS3(self, file):
+        pass
+
+    @abstractmethod
     def requestCreate(self, title, content, accountId):
         pass
 
     @abstractmethod
     def requestRead(self, id):
+        pass
+
+    @abstractmethod
+    def requestDelete(self, boardId, accountId):
         pass

@@ -17,27 +17,27 @@ class KakaoAuthModule {
     String baseServerUrl = dotenv.env['BASE_URL'] ?? '';
 
     return MultiProvider(
-        providers: [
-          Provider<KakaoAuthRemoteDataSource>(
-              create: (_) => KakaoAuthRemoteDataSource(baseServerUrl)
+      providers: [
+        Provider<KakaoAuthRemoteDataSource>(
+            create: (_) => KakaoAuthRemoteDataSource(baseServerUrl)
+        ),
+        ProxyProvider<KakaoAuthRemoteDataSource, KakaoAuthRepository>(
+          update: (_, remoteDataSrouce, __) =>
+              KakaoAuthRepositoryImpl(remoteDataSrouce),
+        ),
+        ProxyProvider<KakaoAuthRepository, LoginUseCaseImpl>(
+            update: (_, repository, __) =>
+                LoginUseCaseImpl(repository)
+        ),
+        ChangeNotifierProvider<KakaoAuthProvider>(
+          create: (context) => KakaoAuthProvider(
+            loginUseCase: context.read<LoginUseCaseImpl>(),
+            fetchUserInfoUseCase: context.read<FetchUserInfoUseCaseImpl>(),
+            requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
           ),
-          ProxyProvider<KakaoAuthRemoteDataSource, KakaoAuthRepository>(
-            update: (_, remoteDataSrouce, __) =>
-                KakaoAuthRepositoryImpl(remoteDataSrouce),
-          ),
-          ProxyProvider<KakaoAuthRepository, LoginUseCaseImpl>(
-              update: (_, repository, __) =>
-                  LoginUseCaseImpl(repository)
-          ),
-          ChangeNotifierProvider<KakaoAuthProvider>(
-            create: (context) => KakaoAuthProvider(
-              loginUseCase: context.read<LoginUseCaseImpl>(),
-              fetchUserInfoUseCase: context.read<FetchUserInfoUseCaseImpl>(),
-              requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
-            ),
-          ),
-        ],
-        child: KakaoLoginPage()
+        ),
+      ],
+      child: KakaoLoginPage()
     );
   }
 }

@@ -17,7 +17,7 @@ class BoardListProvider with ChangeNotifier {
   BoardListProvider({
     required this.listBoardUseCase
   });
-
+  
   // Nuxt에서 Action에서 사용했던 Promise와 같은 역할임
   Future<void> listBoard(int page, int perPage) async {
     if (isLoading) return;

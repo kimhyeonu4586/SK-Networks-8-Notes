@@ -1,3 +1,5 @@
+import uuid
+
 from account.repository.account_repository_impl import AccountRepositoryImpl
 from account_profile.repository.account_profile_repository_impl import AccountProfileRepositoryImpl
 from blog_post.entity.blog_post import BlogPost
@@ -41,6 +43,11 @@ class BlogPostServiceImpl(BlogPostService):
         ]
 
         return paginatedFilteringBlogPostList, totalItems, totalPages
+
+    def requestUploadToS3(self, file):
+        filename = f"{uuid.uuid4()}.html"
+
+        return self.__blogPostRepository.uploadToS3(file, filename)
 
     def requestCreate(self, title, content, accountId):
         if not title or not content:
@@ -95,7 +102,7 @@ class BlogPostServiceImpl(BlogPostService):
 
             # 게시글 작성자와 요청한 사용자가 동일한지 확인
             if blogPost.writer.id != accountProfile.id:
-                raise ValueError("You are not authorized to modify this board.")
+                raise ValueError("You are not authorized to modify this post.")
 
             # 제목 업데이트
             blogPost.title = title
@@ -113,6 +120,25 @@ class BlogPostServiceImpl(BlogPostService):
             }
 
         except BlogPost.DoesNotExist:
-            raise ValueError(f"Board with ID {updatedBlogPost} does not exist.")
+            raise ValueError(f"BlogPost with ID {updatedBlogPost} does not exist.")
         except Exception as e:
-            raise Exception(f"Error while modifying the board: {str(e)}")
+            raise Exception(f"Error while modifying the post: {str(e)}")
+
+    def requestDelete(self, id, accountId):
+        try:
+            account = self.__accountRepository.findById(accountId)
+            accountProfile = self.__accountProfileRepository.findByAccount(account)
+
+            blogPost = self.__blogPostRepository.findById(id)
+            if not blogPost:
+                raise ValueError(f"BlogPost with ID {id} does not exist.")
+
+            if blogPost.writer.id != accountProfile.id:
+                raise ValueError("You are not authorized to modify this post.")
+
+            # 게시글 삭제 요청
+            success = self.__blogPostRepository.deleteById(id)
+            return success
+
+        except Exception as e:
+            raise Exception(f"게시글 삭제 중 오류 발생: {str(e)}")

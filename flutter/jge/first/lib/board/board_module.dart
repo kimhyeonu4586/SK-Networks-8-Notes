@@ -45,7 +45,7 @@ class BoardModule {
         ...provideCommonProviders(),
         ChangeNotifierProvider(
           create: (_) =>
-              BoardListProvider(listBoardUseCase: listBoardUseCase),
+            BoardListProvider(listBoardUseCase: listBoardUseCase),
         )
       ],
       child: BoardListPage(),
@@ -57,8 +57,8 @@ class BoardModule {
       providers: [
         ...provideCommonProviders(),
         ChangeNotifierProvider(
-            create: (_) =>
-                BoardCreateProvider(createBoardUseCase: createBoardUseCase)
+          create: (_) =>
+            BoardCreateProvider(createBoardUseCase: createBoardUseCase)
         )
       ],
       child: BoardCreatePage(),
@@ -70,11 +70,11 @@ class BoardModule {
       providers: [
         ...provideCommonProviders(),
         ChangeNotifierProvider(
-            create: (_) =>
+          create: (_) =>
             BoardReadProvider(
-                readBoardUseCase: readBoardUseCase,
-                deleteBoardUseCase: deleteBoardUseCase,
-                boardId: id
+              readBoardUseCase: readBoardUseCase,
+              deleteBoardUseCase: deleteBoardUseCase,
+              boardId: id
             )..fetchBoard()
         ),
       ],

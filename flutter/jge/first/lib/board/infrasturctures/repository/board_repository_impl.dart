@@ -12,7 +12,7 @@ class BoardRepositoryImpl implements BoardRepository {
   @override
   Future<BoardListResponse> listBoard(int page, int perPage) async {
     final boardListResponse =
-    await boardRemoteDataSource.listBoard(page, perPage);
+      await boardRemoteDataSource.listBoard(page, perPage);
 
     return boardListResponse;
   }
@@ -20,8 +20,7 @@ class BoardRepositoryImpl implements BoardRepository {
   @override
   Future<Board> create(String title, String content, String userToken) async {
     try {
-      final board = await boardRemoteDataSource.create(
-          title, content, userToken);
+      final board = await boardRemoteDataSource.create(title, content, userToken);
       return board;
     } catch (e) {
       print("오류 발생: $e");
@@ -40,8 +39,8 @@ class BoardRepositoryImpl implements BoardRepository {
   }
 
   @override
-  Future<Board?> updateBoard(int boardId, String title, String content,
-      String userToken) async {
+  Future<Board?> updateBoard(
+      int boardId, String title, String content, String userToken) async {
     try {
       final updatedBoard = await boardRemoteDataSource.updateBoard(
           boardId, title, content, userToken);
