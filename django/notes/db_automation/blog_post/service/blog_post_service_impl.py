@@ -42,10 +42,14 @@ class BlogPostServiceImpl(BlogPostService):
             for blogPost in paginatedBlogPostList
         ]
 
+        print(f"paginatedFilteringBlogPostList: {paginatedFilteringBlogPostList}")
+
         return paginatedFilteringBlogPostList, totalItems, totalPages
 
-    def requestUploadToS3(self, file):
-        filename = f"{uuid.uuid4()}.html"
+    def requestUploadToS3(self, file, title):
+        filename = f"{title}-{uuid.uuid4()}.html"
+
+        print(f"filename: {filename}")
 
         return self.__blogPostRepository.uploadToS3(file, filename)
 
@@ -76,6 +80,7 @@ class BlogPostServiceImpl(BlogPostService):
         return {
             "id": savedBlogPost.id,
             "title": savedBlogPost.title,
+            "content": blogPost.content,
             "writerNickname": savedBlogPost.writer.nickname,
             "createDate": savedBlogPost.create_date.strftime("%Y-%m-%d %H:%M"),
         }

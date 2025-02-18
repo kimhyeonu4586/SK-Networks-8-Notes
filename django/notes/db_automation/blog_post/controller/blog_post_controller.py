@@ -34,9 +34,11 @@ class BlogPostController(viewsets.ViewSet):
 
         print(f"fileContent: {fileContent}")
 
+        title = request.data.get('title')
+
         try:
-            file_url = self.blogPostService.requestUpload(fileContent)
-            return JsonResponse({'url': file_url}, status=status.HTTP_200_OK)
+            filename = self.blogPostService.requestUploadToS3(fileContent, title)
+            return JsonResponse({'filename': filename}, status=status.HTTP_200_OK)
 
         except Exception as e:
             return JsonResponse({'error': f'오류 발생: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -8,7 +8,7 @@ class BlogPostService(ABC):
         pass
 
     @abstractmethod
-    def requestUploadToS3(self, file):
+    def requestUploadToS3(self, file, title):
         pass
 
     @abstractmethod

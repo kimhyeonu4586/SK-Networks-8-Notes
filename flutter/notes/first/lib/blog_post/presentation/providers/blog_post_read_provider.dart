@@ -25,7 +25,7 @@ class BlogPostReadProvider with ChangeNotifier {
     required this.blogPostId,
   });
 
-  BlogPost? get board => _blogPost;
+  BlogPost? get blogPost => _blogPost;
   String? get error => _error;
   bool get isLoading => _isLoading;
 
@@ -64,7 +64,7 @@ class BlogPostReadProvider with ChangeNotifier {
 
   Future<void> deleteBlogPost() async {
     try {
-      if (board != null) {
+      if (blogPost != null) {
         final userToken = await secureStorage.read(key: 'userToken');
         if (userToken == null) {
           throw Exception('User is not logged in.');
