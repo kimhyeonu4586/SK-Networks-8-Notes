@@ -3,18 +3,19 @@
 import 'package:first/blog_post/domain/usecases/upload/upload_blog_post_use_case_impl.dart';
 import 'package:first/blog_post/presentation/providers/blog_post_create_provider.dart';
 import 'package:first/blog_post/presentation/providers/blog_post_list_provider.dart';
+import 'package:first/blog_post/presentation/providers/blog_post_modify_provider.dart';
 import 'package:first/blog_post/presentation/providers/blog_post_read_provider.dart';
 import 'package:first/blog_post/presentation/ui/blog_post_create_page.dart';
 import 'package:first/blog_post/presentation/ui/blog_post_list_page.dart';
 import 'package:first/blog_post/presentation/ui/blog_post_modify_page.dart';
 import 'package:first/blog_post/presentation/ui/blog_post_read_page.dart';
-import 'package:first/blog_post/presentation/ui/component/blog_post_modify_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 import 'domain/usecases/create/create_blog_post_use_case_impl.dart';
+import 'domain/usecases/delete/delete_blog_post_usecase_impl.dart';
 import 'domain/usecases/list/list_blog_post_use_case_impl.dart';
 import 'domain/usecases/read/read_blog_post_usecase_impl.dart';
 import 'domain/usecases/update/update_blog_post_usecase_impl.dart';
@@ -32,7 +33,7 @@ class BlogPostModule {
   static final uploadBlogPostUseCase = UploadBlogPostUseCaseImpl(blogPostRepository);
   static final readBlogPostUseCase = ReadBlogPostUseCaseImpl(blogPostRepository);
   static final updateBlogPostUseCase = UpdateBlogPostUseCaseImpl(blogPostRepository);
-  // static final deleteBoardUseCase = DeleteBoardUseCaseImpl(boardRepository);
+  static final deleteBlogPostUseCase = DeleteBlogPostUseCaseImpl(blogPostRepository);
 
   static List<SingleChildWidget> provideCommonProviders () {
     return [
@@ -41,6 +42,7 @@ class BlogPostModule {
       Provider(create: (_) => uploadBlogPostUseCase),
       Provider(create: (_) => readBlogPostUseCase),
       Provider(create: (_) => updateBlogPostUseCase),
+      Provider(create: (_) => deleteBlogPostUseCase),
     ];
   }
 
@@ -81,7 +83,7 @@ class BlogPostModule {
             create: (_) =>
             BlogPostReadProvider(
                 readBlogPostUseCase: readBlogPostUseCase,
-                // deleteBoardUseCase: deleteBoardUseCase,
+                deleteBlogPostUseCase: deleteBlogPostUseCase,
                 blogPostId: id
             )..fetchBlogPost()
         ),

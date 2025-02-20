@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:provider/provider.dart';
@@ -142,23 +145,91 @@ class _BlogPostReadPageState extends State<BlogPostReadPage> {
   }
 
   Widget _buildHtmlContent(String content) {
-    final document = parse(content);  // HTML 파싱
-    final elements = document.body!.children;
+    final document = parse(content);
+    final elements = document.body?.children ?? [];
+
+    print("Content: $content");
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: elements.map((element) {
+        print('Processing element: ${element.localName}');
+        print('Element text: ${element.text}');
+
         if (element.localName == 'p') {
+          final children = element.children;
+          List<Widget> widgets = [];
+
+          for (var child in children) {
+            if (child.localName == 'img') {
+              String? src = child.attributes['src'];
+              print('Image src inside <p>: $src');
+
+              if (src == null || src.isEmpty) {
+                print('Error: Image src is null or empty inside <p>');
+                widgets.add(SizedBox());
+              } else if (src.startsWith('data:image')) {
+                try {
+                  final base64Str = src.contains(',')
+                      ? src.split(',').last
+                      : src;
+
+                  print('Base64 image string: $base64Str');
+
+                  if (base64Str.isEmpty) {
+                    print('Error: Base64 string is empty');
+                    widgets.add(_imageErrorWidget());
+                  } else {
+                    Uint8List bytes = base64Decode(base64Str);
+                    print('Base64 decoding successful, byte length: ${bytes.length}');
+                    widgets.add(Image.memory(
+                      bytes,
+                      errorBuilder: (_, __, ___) => _imageErrorWidget(),
+                    ));
+                  }
+                } catch (e) {
+                  print('Error decoding base64: $e');
+                  widgets.add(_imageErrorWidget()); // Error widget for base64 decoding failure
+                }
+              } else {
+                widgets.add(Image.network(
+                  src,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                            (loadingProgress.expectedTotalBytes ?? 1)
+                            : null,
+                      ),
+                    );
+                  },
+                  errorBuilder: (_, __, ___) => _imageErrorWidget(),
+                ));
+              }
+            } else {
+              widgets.add(Text(child.text));
+            }
+          }
+
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Text(element.text),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: widgets,
+            ),
           );
-        } else if (element.localName == 'img') {
-          return Image.network(element.attributes['src']!);
         } else {
-          return SizedBox();  // 기타 HTML 태그는 기본적으로 처리 안 함
+          return SizedBox();
         }
       }).toList(),
+    );
+  }
+
+  Widget _imageErrorWidget() {
+    return Center(
+      child: Icon(Icons.broken_image, color: Colors.grey, size: 50),
     );
   }
 
@@ -176,9 +247,9 @@ class _BlogPostReadPageState extends State<BlogPostReadPage> {
           ),
           TextButton(
             onPressed: () async {
-              // await blogPostReadProvider.deleteBoard();
-              // Navigator.of(context).pop();
-              // Navigator.of(context).pop({'deleted': true});
+              await blogPostReadProvider.deleteBlogPost();
+              Navigator.of(context).pop();
+              Navigator.of(context).pop({'deleted': true});
             },
             child: Text('삭제'),
           ),

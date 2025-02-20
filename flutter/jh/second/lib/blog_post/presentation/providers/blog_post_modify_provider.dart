@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../../domain/entity/blog_post.dart';
-import '../../../domain/usecases/update/update_blog_post_usecase.dart';
-
+import '../../domain/entity/blog_post.dart';
+import '../../domain/usecases/update/update_blog_post_usecase.dart';
 
 class BlogPostModifyProvider extends ChangeNotifier {
   final UpdateBlogPostUseCase updateBlogPostUseCase;
   final int blogPostId;
 
-  bool isLoading = false; // To track loading state
-  String? errorMessage; // To store error message
+  bool isLoading = false;
+  String? errorMessage;
 
   BlogPostModifyProvider({
     required this.updateBlogPostUseCase,

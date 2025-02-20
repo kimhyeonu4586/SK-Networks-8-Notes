@@ -8,7 +8,7 @@ import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:html/parser.dart' as htmlParser;
 import 'package:html/dom.dart' as htmlDom;
 
-import 'component/blog_post_modify_provider.dart';
+import '../providers/blog_post_modify_provider.dart';
 
 class BlogPostModifyPage extends StatefulWidget {
   final int blogPostId;

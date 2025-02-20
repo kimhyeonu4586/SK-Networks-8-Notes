@@ -57,17 +57,14 @@ class BoardReadProvider with ChangeNotifier {
   Future<void> deleteBoard() async {
     try {
       if (board != null) {
-        // Get the user token from FlutterSecureStorage
         final userToken = await secureStorage.read(key: 'userToken');
         if (userToken == null) {
           throw Exception('User is not logged in.');
         }
 
-        // Pass the boardId and userToken to the deleteBoardUseCase
         await deleteBoardUseCase.execute(board!.id, userToken);
 
-        // Optionally, handle additional steps after deletion (e.g., notify listeners, update UI)
-        _board = null; // Clear the board from memory after deletion
+        _board = null;
         notifyListeners();
       }
     } catch (e) {

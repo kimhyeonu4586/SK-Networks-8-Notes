@@ -14,6 +14,9 @@ from gradient_descent.controller.gradient_descent_controller import gradientDesc
 from principal_component_analysis.controller.pca_controller import principalComponentAnalysisRouter
 from convolution_neural_network.controller.cnn_controller import convolutionNeuralNetworkRouter
 from openai_basic.controller.openai_basic_controller import openAiBasicRouter
+from game_data_fine_tuning.controller.gdft_controller import gameDataFineTuningRouter
+from openai_fine_tuning.openai_fine_tuning_controller import openaiFineTuningRouter
+
 
 load_dotenv()
 
@@ -31,6 +34,8 @@ app.include_router(hyperParameterRouter)
 app.include_router(principalComponentAnalysisRouter)
 app.include_router(convolutionNeuralNetworkRouter)
 app.include_router(openAiBasicRouter)
+app.include_router(gameDataFineTuningRouter)
+app.include_router(openaiFineTuningRouter)
 
 if __name__ == "__main__":
     uvicorn.run(app, host=os.getenv('HOST'), port=int(os.getenv('FASTAPI_PORT')))

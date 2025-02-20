@@ -15,8 +15,9 @@ class ReadBlogPostUseCaseImpl implements ReadBlogPostUseCase {
   Future<BlogPost?> execute(int blogPostId) async {
     try {
       print("blogPostId: ${blogPostId}");
-      final board = await blogPostRepository.readBlogPost(blogPostId);
-      return board;
+      final blogPost = await blogPostRepository.readBlogPost(blogPostId);
+      print("ReadBlogPostUseCaseImpl execute() -> blogPost: ${blogPost}");
+      return blogPost;
     } catch (e) {
       return null;
     }

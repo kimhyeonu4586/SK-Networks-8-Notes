@@ -103,6 +103,28 @@ class BlogPostRemoteDataSource {
     }
   }
 
+  Future<String> uploadBlogPostImage(String imageContent, String userToken) async {
+    print("BlogPostRemoteDataSource uploadBlogPostImage() -> imageContent: $imageContent");
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/blog-post/upload-image'),
+      headers: {
+        'Content-Type': 'application/json', // JSON Content-Type 추가
+      },
+      body: jsonEncode({
+        'image': imageContent, // base64로 인코딩된 이미지 데이터
+        'userToken': userToken,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['imageUrl']; // 이미지 URL 반환
+    } else {
+      throw Exception('❌ Failed to upload image: ${response.body}');
+    }
+  }
+
   Future<BlogPost> updateBlogPost(
       int blogPostId, String title, String content, String userToken) async {
     final url = Uri.parse('$baseUrl/blog-post/modify/$blogPostId');

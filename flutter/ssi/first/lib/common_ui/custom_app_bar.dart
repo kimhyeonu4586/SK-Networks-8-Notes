@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../blog_post/blog_post_module.dart';
 import '../kakao_authentication/kakao_auth_module.dart';
 import '../simple_chat/simple_chat_module.dart';
 import 'app_bar_action.dart';
@@ -21,12 +22,27 @@ class CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("CustomAppBar apiUrl: ${apiUrl}");
+    print("CustomAppBar apiKey: ${apiKey}");
+
     return Column(
       children: [
         AppBar(
           title: Text(title),
           backgroundColor: Colors.lightBlue,
           actions: [
+            AppBarAction(
+              icon: Icons.article,
+              tooltip: 'Blog Posts',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlogPostModule.provideBlogPostListPage(),
+                  ),
+                );
+              },
+            ),
             AppBarAction(
                 icon: Icons.list_alt,
                 tooltip: '게시물 리스트',

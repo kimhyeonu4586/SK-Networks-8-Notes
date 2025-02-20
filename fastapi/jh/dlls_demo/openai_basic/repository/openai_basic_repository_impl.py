@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import httpx
 import openai
@@ -24,6 +25,7 @@ class OpenAIBasicRepositoryImpl(OpenAIBasicRepository):
         Provide a detailed answer to the above question."""
 
     OPENAI_CHAT_COMPLETIONS_URL = "https://api.openai.com/v1/chat/completions"
+    OPENAI_TTS_URL = "https://api.openai.com/v1/audio/speech"
 
     async def generateText(self, userSendMessage):
         data = {
@@ -70,3 +72,31 @@ class OpenAIBasicRepositoryImpl(OpenAIBasicRepository):
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"에러 발생: {str(e)}")
+
+    async def convert_text_to_speech(self, text: str, file_path: Path):
+        """
+        OpenAI TTS API를 호출하여 텍스트를 음성으로 변환하고 파일로 저장
+        """
+        try:
+            print("Starting text-to-speech conversion...")
+            response = openai.audio.speech.create(
+                model="tts-1",  # 최신 TTS 모델
+                voice="alloy",  # 원하는 음성 선택 (다양한 음성 옵션 있음)
+                input=text
+            )
+            print(f"Response received from OpenAI: {response}")
+
+            # 응답의 'content' 속성에서 음성 파일 데이터 추출
+            audio_data = response.content
+            print(f"Audio data length: {len(audio_data)} bytes")
+
+            # 음성 파일을 지정된 경로에 저장
+            with open(file_path, "wb") as audio_file:
+                print(f"Saving audio to {file_path}")
+                audio_file.write(audio_data)
+            print(f"Audio saved successfully at {file_path}")
+
+        except Exception as e:
+            print(f"Error in TTS conversion: {e}")
+            raise Exception(f"음성 변환 중 오류 발생: {str(e)}")
+

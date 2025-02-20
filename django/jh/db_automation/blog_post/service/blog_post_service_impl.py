@@ -1,3 +1,5 @@
+import uuid
+
 from account.repository.account_repository_impl import AccountRepositoryImpl
 from account_profile.repository.account_profile_repository_impl import AccountProfileRepositoryImpl
 from blog_post.entity.blog_post import BlogPost
@@ -40,7 +42,16 @@ class BlogPostServiceImpl(BlogPostService):
             for blogPost in paginatedBlogPostList
         ]
 
+        print(f"paginatedFilteringBlogPostList: {paginatedFilteringBlogPostList}")
+
         return paginatedFilteringBlogPostList, totalItems, totalPages
+
+    def requestUploadToS3(self, file, title):
+        filename = f"{title}-{uuid.uuid4()}.html"
+
+        print(f"filename: {filename}")
+
+        return self.__blogPostRepository.uploadToS3(file, filename)
 
     def requestCreate(self, title, content, accountId):
         if not title or not content:
@@ -69,6 +80,7 @@ class BlogPostServiceImpl(BlogPostService):
         return {
             "id": savedBlogPost.id,
             "title": savedBlogPost.title,
+            "content": blogPost.content,
             "writerNickname": savedBlogPost.writer.nickname,
             "createDate": savedBlogPost.create_date.strftime("%Y-%m-%d %H:%M"),
         }
