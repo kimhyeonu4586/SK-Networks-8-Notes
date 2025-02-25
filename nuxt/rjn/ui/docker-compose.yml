@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  nuxt:
+    image: ghcr.io/${GITHUB_ACTOR}/frontend-deploy-nuxt:latest
+    container_name: frontend-deploy-nuxt
+    command: "npm run start"
+    ports:
+      - "3000:3000"
+    environment:
+      - VUE_APP_BASE_URL=${VUE_APP_BASE_URL}
+      - VUE_APP_AI_BASE_URL=${VUE_APP_AI_BASE_URL}
+      - TOSS_CLIENT_KEY=${TOSS_CLIENT_KEY}
+      - TOSS_SECRET_KEY=${TOSS_SECRET_KEY}
+    restart: always
+    networks:
+      - app
+  
+  nginx:
+    image: "nginx:latest"
+    container_name: frontend-deploy-nginx
+    restart: unless-stopped
+    volumes:
+      - /home/ec2-user/nuxt/frontend/conf:/etc/ngingx/conf.d
+    ports:
+      - "80:80"
+    networks:
+      - app
+
+networks:
+  app:
+    driver: bridge

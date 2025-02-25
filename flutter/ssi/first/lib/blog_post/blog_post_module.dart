@@ -98,7 +98,7 @@ class BlogPostModule {
         ChangeNotifierProvider(
           create: (_) => BlogPostModifyProvider(
             updateBlogPostUseCase: updateBlogPostUseCase,
-            boardPostId: blogPostId,
+            blogPostId: blogPostId,
           ), // Load board data (if needed)
         ),
       ],

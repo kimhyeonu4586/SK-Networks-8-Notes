@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../domain/entity/board.dart';
+import '../../domain/usecases/delete/delete_board_usecase.dart';
 import '../../domain/usecases/read/read_board_usecase.dart';
 
 class BoardReadProvider with ChangeNotifier {
   final ReadBoardUseCase readBoardUseCase;
+  final DeleteBoardUseCase deleteBoardUseCase;
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
   final int boardId;
 
@@ -19,6 +21,7 @@ class BoardReadProvider with ChangeNotifier {
 
   BoardReadProvider({
     required this.readBoardUseCase,
+    required this.deleteBoardUseCase,
     required this.boardId,
   });
 
@@ -40,6 +43,34 @@ class BoardReadProvider with ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  void updateBoard(Board updatedBoard) {
+    if (_board?.id == updatedBoard.id) {
+      print("read provider update");
+      _board = updatedBoard;
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteBoard() async {
+    try {
+      if (board != null) {
+        final userToken = await secureStorage.read(key: 'userToken');
+        if (userToken == null) {
+          throw Exception('User is not logged in.');
+        }
+
+        await deleteBoardUseCase.execute(board!.id, userToken);
+
+        _board = null;
+        notifyListeners();
+      }
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      throw e;
     }
   }
 }

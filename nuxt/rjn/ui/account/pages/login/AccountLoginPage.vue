@@ -11,7 +11,6 @@
   </v-container>
 </template>
 
-
 <script setup>
 import loginBgImage from '@/assets/images/fixed/login_bg2.webp';
 
@@ -19,7 +18,6 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAccountStore } from '@/stores/accountStore';
 import { useKakaoAuthenticationStore } from '../../../kakaoAuthentication/stores/kakaoAuthenticationStore'
-
 
 const router = useRouter();
 
@@ -40,57 +38,6 @@ const kakaoAuthentication = useKakaoAuthenticationStore();
 const goToKakaoLogin = async () => {
   // sessionStorage.setItem("loginType", "KAKAO");
   await kakaoAuthentication.requestKakaoLoginToDjango();
-};
-
-// Computed properties (Pinia 상태에 기반한 계산된 속성)
-// const isAuthenticatedKakao = computed(() => authentication.isAuthenticatedKakao);
-// const isAuthenticatedNormal = computed(() => account.isAuthenticatedNormal);
-// const loginType = computed(() => account.loginType);
-// const isKakaoAdmin = computed(() => account.isKakaoAdmin);
-
-// Methods
-const goToHome = () => {
-  router.push("/");
-};
-
-const goToSignUp = () => {
-  router.push("/account/register/normal");
-};
-
-const onSubmit = async () => {
-  if (!form.value) return;
-  loading.value = true;
-
-  try {
-    const response = await checkPassword();
-    const roleType = await account.requestRoleTypeToDjango(email.value);
-
-    if (response) {
-      login_flag.value = true; // 로그인 성공
-      sessionStorage.setItem('email', email.value);
-      sessionStorage.setItem('loginType', 'NORMAL');
-
-      if (roleType.data.roleType === "ADMIN") {
-        // Admin 처리
-        sessionStorage.removeItem('normalToken');
-        sessionStorage.setItem('adminToken', true);
-        account.REQUEST_IS_ADMIN_TO_DJANGO(true);
-        goToHome();
-      } else {
-        // Normal 처리
-        sessionStorage.setItem('normalToken', true);
-        account.isAuthenticatedNormal = true;
-        goToHome();
-      }
-    } else {
-      login_flag.value = false; // 로그인 실패
-    }
-  } catch (error) {
-    console.error("로그인 중 에러 발생: ", error);
-    login_flag.value = false;
-  } finally {
-    loading.value = false;
-  }
 };
 
 </script>

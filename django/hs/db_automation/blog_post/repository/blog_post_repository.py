@@ -10,6 +10,10 @@ class BlogPostRepository(ABC):
         pass
 
     @abstractmethod
+    def uploadToS3(self, fileContent: str, filename: str):
+        pass
+
+    @abstractmethod
     def save(self, blog_post: BlogPost) -> BlogPost:
         pass
 

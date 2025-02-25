@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../domain/entity/board.dart';
 import 'card_item.dart';
 
 class BoardList extends StatelessWidget {
@@ -38,6 +39,20 @@ class BoardList extends StatelessWidget {
 
             if (result != null) {
               final boardListProvider = Provider.of<BoardListProvider>(context, listen: false);
+
+              if (result['deleted'] == true) {
+                // 게시글 삭제 처리
+                boardListProvider.listBoard(
+                  boardListProvider.currentPage, // 현재 페이지 유지
+                  6, // 고정된 perPage 값
+                );
+                // boardListProvider.removeBoard();
+              } else if (result['updatedBoard'] != null &&
+                  result['updatedBoard'] is Board) {
+                // 게시글 수정 처리
+                final updatedBoard = result['updatedBoard'] as Board;
+                boardListProvider.updateBoard(updatedBoard);
+              }
             }
           }
         );

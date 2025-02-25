@@ -46,6 +46,13 @@ class BlogPostRepositoryImpl(BlogPostRepository):
         except BlogPost.DoesNotExist:
             return None
 
+    def deleteFromS3(self, filePath: str):
+        try:
+            s3Client = S3Client.getInstance()
+            s3Client.deleteFile(filePath)
+        except Exception as e:
+            print(f"S3에서 파일 삭제 실패: {e}")
+
     def deleteById(self, id):
         try:
             # 게시글을 ID로 조회

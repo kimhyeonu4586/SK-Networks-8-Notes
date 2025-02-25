@@ -1,10 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter/services.dart';
-import 'package:crypto/crypto.dart';
-import 'package:convert/convert.dart';
-
 import 'package:first/home/home_module.dart';
 import 'package:first/kakao_authentication/domain/usecase/login_usecase_impl.dart';
 import 'package:first/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
@@ -15,9 +8,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 
-import 'home/presentation/ui/home_page.dart';
 import 'kakao_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
 import 'kakao_authentication/domain/usecase/request_user_token_usecase_impl.dart';
+
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,6 +66,15 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          quill.FlutterQuillLocalizations.delegate, // Add this line to fix the error
+        ],
+        supportedLocales: [
+          Locale('en', 'US'), // Add supported locales
+          Locale('ko', 'KR'), // For example, support Korean
+        ],
         home: HomeModule.provideHomePage(),
       )
     );

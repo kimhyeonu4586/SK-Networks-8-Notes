@@ -45,5 +45,70 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- 앱에서 카메라 사용 권한 -->
+        <key>NSCameraUsageDescription</key>
+        <string>이 앱은 사진 촬영을 위해 카메라 접근 권한이 필요합니다.</string>
+
+        <!-- 사진 라이브러리 읽기/쓰기 권한 -->
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>이 앱은 사진을 업로드하기 위해 사진 라이브러리에 접근합니다.</string>
+        <key>NSPhotoLibraryAddUsageDescription</key>
+        <string>이 앱은 편집된 사진을 저장하기 위해 사진 라이브러리에 접근합니다.</string>
+
+        <!-- 파일 및 저장소 접근 권한 -->
+        <key>UISupportsDocumentBrowser</key>
+        <true/>
+
+        <!-- AWS S3 TransferService 사용을 위한 네트워크 권한 -->
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+        <key>NSAllowsArbitraryLoadsInWebContent</key>
+        <true/>
+        <key>NSAllowsArbitraryLoadsForMedia</key>
+        <true/>
+
+        <!-- 백그라운드 업로드 및 다운로드 지원 -->
+        <key>UIBackgroundModes</key>
+        <array>
+            <string>fetch</string>
+            <string>background-processing</string>
+        </array>
+
+        <!-- 카카오 로그인 URL 스킴 -->
+        <key>LSApplicationQueriesSchemes</key>
+        <array>
+            <string>kakaotalk</string>
+            <string>kakaokompassauth</string>
+        </array>
+
+        <!-- 카카오 로그인 및 공유 기능을 위한 Custom URL Scheme -->
+        <key>CFBundleURLTypes</key>
+        <array>
+            <dict>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>kakaoYOUR_APP_KEY</string>
+                </array>
+            </dict>
+        </array>
+
+        <!-- 인터넷 접근 및 AWS 예외 설정 -->
+        <key>NSAppTransportSecurity</key>
+        <dict>
+            <key>NSAllowsArbitraryLoads</key>
+            <true/>
+            <key>NSExceptionDomains</key>
+            <dict>
+                <key>s3.amazonaws.com</key>
+                <dict>
+                    <key>NSIncludesSubdomains</key>
+                    <true/>
+                    <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                    <true/>
+                    <key>NSExceptionRequiresForwardSecrecy</key>
+                    <false/>
+                </dict>
+            </dict>
+        </dict>
 </dict>
 </plist>

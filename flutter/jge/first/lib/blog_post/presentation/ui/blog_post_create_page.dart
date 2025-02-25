@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
-import '../providers/blog_post_create_provider.dart';
+import 'package:first/blog_post/presentation/providers/blog_post_create_provider.dart';
+
 
 class BlogPostCreatePage extends StatefulWidget {
   @override

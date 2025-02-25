@@ -37,4 +37,31 @@ class BoardRepositoryImpl implements BoardRepository {
       throw Exception("게시물 읽기 실패");
     }
   }
+
+  @override
+  Future<Board?> updateBoard(
+      int boardId, String title, String content, String userToken) async {
+    try {
+      final updatedBoard = await boardRemoteDataSource.updateBoard(
+          boardId, title, content, userToken);
+
+      if (updatedBoard == null) {
+        throw Exception("Invalid response or missing data field.");
+      }
+
+      return updatedBoard;
+    } catch (e) {
+      print('Error in updateBoard repository: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteBoard(int id, String userToken) async {
+    try {
+      return await boardRemoteDataSource.deleteBoard(id, userToken);
+    } catch (e) {
+      throw Exception('게시글 삭제 실패: $e');
+    }
+  }
 }

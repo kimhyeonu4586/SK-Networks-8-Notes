@@ -10,7 +10,6 @@ import 'package:html/dom.dart' as htmlDom;
 
 import '../providers/blog_post_modify_provider.dart';
 
-
 class BlogPostModifyPage extends StatefulWidget {
   final int blogPostId;
   final String initialTitle;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:provider/provider.dart';
 
+import '../../blog_post_module.dart';
 import '../../domain/entity/blog_post.dart';
 import '../providers/blog_post_read_provider.dart';
 
@@ -18,19 +19,19 @@ class _BlogPostReadPageState extends State<BlogPostReadPage> {
     // 게시글 데이터를 가져옵니다.
     final blogPostReadProvider = Provider.of<BlogPostReadProvider>(context, listen: false);
 
-    if (blogPostReadProvider.board == null) {
+    if (blogPostReadProvider.blogPost == null) {
       blogPostReadProvider.fetchBlogPost();
     }
   }
 
   Future<bool> _onWillPop() async {
     // 뒤로가기 버튼 이벤트 처리
-    final boardReadProvider =
+    final blogPostReadProvider =
     Provider.of<BlogPostReadProvider>(context, listen: false);
-    // final updatedBlogPost = blogPostReadProvider.blogPost;
-    //
-    // // 현재 수정된 게시글 데이터를 반환하며 뒤로가기
-    // Navigator.pop(context, updatedBlogPost);
+    final updatedBlogPost = blogPostReadProvider.blogPost;
+
+    // 현재 수정된 게시글 데이터를 반환하며 뒤로가기
+    Navigator.pop(context, updatedBlogPost);
     return Future.value(false); // 기본 뒤로가기 동작 방지
   }
 
@@ -47,38 +48,38 @@ class _BlogPostReadPageState extends State<BlogPostReadPage> {
             IconButton(
               icon: Icon(Icons.edit),
               onPressed: () {
-                final selectedBlogPost = blogPostReadProvider.board;
+                final selectedBlogPost = blogPostReadProvider.blogPost;
                 if (selectedBlogPost != null) {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => BlogPostModule.provideBoardModifyPage(
-                  //       selectedBlogPost.id,
-                  //       selectedBlogPost.title,
-                  //       selectedBlogPost.content,
-                  //     ),
-                  //   ),
-                  // ).then((updatedData) {
-                  //   if (updatedData != null &&
-                  //       updatedData is Map<String, dynamic>) {
-                  //     final updatedTitle =
-                  //         updatedData['title'] ?? selectedBlogPost.title;
-                  //     final updatedContent =
-                  //         updatedData['content'] ?? selectedBlogPost.content;
-                  //
-                  //     // 생성된 Board 객체
-                  //     final updatedBoard = BlogPost(
-                  //       id: selectedBlogPost.id,
-                  //       title: updatedTitle,
-                  //       content: updatedContent,
-                  //       nickname: selectedBlogPost.nickname,
-                  //       createDate: selectedBlogPost.createDate,
-                  //     );
-                  //
-                  //     // 상세 페이지 갱신
-                  //     blogPostReadProvider.updateBoard(updatedBoard);
-                  //   }
-                  // });
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlogPostModule.provideBlogPostModifyPage(
+                        selectedBlogPost.id,
+                        selectedBlogPost.title,
+                        selectedBlogPost.content,
+                      ),
+                    ),
+                  ).then((updatedData) {
+                    if (updatedData != null &&
+                        updatedData is Map<String, dynamic>) {
+                      final updatedTitle =
+                          updatedData['title'] ?? selectedBlogPost.title;
+                      final updatedContent =
+                          updatedData['content'] ?? selectedBlogPost.content;
+
+                      // 생성된 Board 객체
+                      final updatedBlogPost = BlogPost(
+                        id: selectedBlogPost.id,
+                        title: updatedTitle,
+                        content: updatedContent,
+                        nickname: selectedBlogPost.nickname,
+                        createDate: selectedBlogPost.createDate,
+                      );
+
+                      // 상세 페이지 갱신
+                      blogPostReadProvider.updateBlogPost(updatedBlogPost);
+                    }
+                  });
                 }
               },
             ),
@@ -104,11 +105,11 @@ class _BlogPostReadPageState extends State<BlogPostReadPage> {
           style: TextStyle(color: Colors.red),
         ),
       );
-    } else if (blogPostReadProvider.board == null) {
+    } else if (blogPostReadProvider.blogPost == null) {
       return Center(child: Text('블로그 포스트를 찾을 수 없습니다.'));
     }
 
-    final blogPost = blogPostReadProvider.board!;
+    final blogPost = blogPostReadProvider.blogPost!;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(

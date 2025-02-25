@@ -40,6 +40,17 @@ dependencies:
 
   kakao_flutter_sdk: ^1.9.6
   flutter_secure_storage: ^9.2.4
+  flutter_quill_extensions: ^11.0.0-dev.7
+  flutter_quill: ^11.0.0-dev.21
+  uuid: ^4.5.1
+  vsc_quill_delta_to_html: ^1.0.5
+  aws_signature_v4: ^0.6.3
+  aws_sdk: ^0.0.3
+  html: ^0.15.5
+  aws_sdk_flutter: ^0.0.1-dev.1
+  webview_flutter: ^4.9.0
+  webview_flutter_wkwebview: ^3.18.2
+#  kakao_map_plugin: ^0.3.2
 
 dev_dependencies:
   flutter_test:

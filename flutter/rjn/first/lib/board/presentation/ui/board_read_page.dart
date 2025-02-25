@@ -46,6 +46,38 @@ class _BoardReadPageState extends State<BoardReadPage> {
               icon: Icon(Icons.edit),
               onPressed: () {
                 final selectedBoard = boardReadProvider.board;
+                if (selectedBoard != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BoardModule.provideBoardModifyPage(
+                        selectedBoard.id,
+                        selectedBoard.title,
+                        selectedBoard.content,
+                      ),
+                    ),
+                  ).then((updatedData) {
+                    if (updatedData != null &&
+                        updatedData is Map<String, dynamic>) {
+                      final updatedTitle =
+                          updatedData['title'] ?? selectedBoard.title;
+                      final updatedContent =
+                          updatedData['content'] ?? selectedBoard.content;
+
+                      // 생성된 Board 객체
+                      final updatedBoard = Board(
+                        id: selectedBoard.id,
+                        title: updatedTitle,
+                        content: updatedContent,
+                        nickname: selectedBoard.nickname,
+                        createDate: selectedBoard.createDate,
+                      );
+
+                      // 상세 페이지 갱신
+                      boardReadProvider.updateBoard(updatedBoard);
+                    }
+                  });
+                }
               },
             ),
             IconButton(
@@ -123,7 +155,9 @@ class _BoardReadPageState extends State<BoardReadPage> {
           ),
           TextButton(
             onPressed: () async {
-
+              await boardReadProvider.deleteBoard();
+              Navigator.of(context).pop();
+              Navigator.of(context).pop({'deleted': true});
             },
             child: Text('삭제'),
           ),

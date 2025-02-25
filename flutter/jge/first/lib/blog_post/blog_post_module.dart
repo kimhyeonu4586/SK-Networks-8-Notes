@@ -1,11 +1,11 @@
-
-
 import 'package:first/blog_post/domain/usecases/upload/upload_blog_post_use_case_impl.dart';
 import 'package:first/blog_post/presentation/providers/blog_post_create_provider.dart';
 import 'package:first/blog_post/presentation/providers/blog_post_list_provider.dart';
 import 'package:first/blog_post/presentation/providers/blog_post_read_provider.dart';
+import 'package:first/blog_post/presentation/providers/blog_post_modify_provider.dart';
 import 'package:first/blog_post/presentation/ui/blog_post_create_page.dart';
 import 'package:first/blog_post/presentation/ui/blog_post_list_page.dart';
+import 'package:first/blog_post/presentation/ui/blog_post_modify_page.dart';
 import 'package:first/blog_post/presentation/ui/blog_post_read_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,6 +15,7 @@ import 'package:provider/single_child_widget.dart';
 import 'domain/usecases/create/create_blog_post_use_case_impl.dart';
 import 'domain/usecases/list/list_blog_post_use_case_impl.dart';
 import 'domain/usecases/read/read_blog_post_usecase_impl.dart';
+import 'domain/usecases/update/update_blog_post_usecase_impl.dart';
 import 'infrastructures/data_sources/blog_post_remote_data_source.dart';
 import 'infrastructures/repository/blog_post_repository_impl.dart';
 
@@ -28,7 +29,7 @@ class BlogPostModule {
   static final createBlogPostUseCase = CreateBlogPostUseCaseImpl(blogPostRepository);
   static final uploadBlogPostUseCase = UploadBlogPostUseCaseImpl(blogPostRepository);
   static final readBlogPostUseCase = ReadBlogPostUseCaseImpl(blogPostRepository);
-  // static final updateBoardUseCase = UpdateBoardUseCaseImpl(boardRepository);
+  static final updateBlogPostUseCase = UpdateBlogPostUseCaseImpl(blogPostRepository);
   // static final deleteBoardUseCase = DeleteBoardUseCaseImpl(boardRepository);
 
   static List<SingleChildWidget> provideCommonProviders () {
@@ -36,7 +37,8 @@ class BlogPostModule {
       Provider(create: (_) => listBlogPostUseCase),
       Provider(create: (_) => createBlogPostUseCase),
       Provider(create: (_) => uploadBlogPostUseCase),
-      Provider(create: (_) => readBlogPostUseCase)
+      Provider(create: (_) => readBlogPostUseCase),
+      Provider(create: (_) => updateBlogPostUseCase),
     ];
   }
 
@@ -46,7 +48,7 @@ class BlogPostModule {
         ...provideCommonProviders(),
         ChangeNotifierProvider(
           create: (_) =>
-            BlogPostListProvider(listBlogPostUseCase: listBlogPostUseCase),
+              BlogPostListProvider(listBlogPostUseCase: listBlogPostUseCase),
         )
       ],
       child: BlogPostListPage(),
@@ -59,10 +61,10 @@ class BlogPostModule {
         ...provideCommonProviders(),
         ChangeNotifierProvider(
           create: (_) =>
-            BlogPostCreateProvider(
-              createBlogPostUseCase: createBlogPostUseCase,
-              uploadBlogPostUseCase: uploadBlogPostUseCase,
-            ),
+              BlogPostCreateProvider(
+                createBlogPostUseCase: createBlogPostUseCase,
+                uploadBlogPostUseCase: uploadBlogPostUseCase,
+              ),
         )
       ],
       child: BlogPostCreatePage(),
@@ -83,6 +85,26 @@ class BlogPostModule {
         ),
       ],
       child: BlogPostReadPage(),
+    );
+  }
+
+  static Widget provideBlogPostModifyPage(
+      int blogPostId, String title, String content) {
+    return MultiProvider(
+      providers: [
+        ...provideCommonProviders(),
+        ChangeNotifierProvider(
+          create: (_) => BlogPostModifyProvider(
+            updateBlogPostUseCase: updateBlogPostUseCase,
+            blogPostId: blogPostId,
+          ), // Load board data (if needed)
+        ),
+      ],
+      child: BlogPostModifyPage(
+        blogPostId: blogPostId, // Pass the boardId
+        initialTitle: title, // Pass the initial title
+        initialContent: content, // Pass the initial content
+      ),
     );
   }
 }

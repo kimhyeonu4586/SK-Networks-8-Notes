@@ -22,5 +22,9 @@ class BlogPostRepository(ABC):
         pass
 
     @abstractmethod
+    def deleteFromS3(self, filePath: str):
+        pass
+
+    @abstractmethod
     def deleteById(self, boardId):
         pass

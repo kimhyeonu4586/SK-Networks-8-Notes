@@ -29,8 +29,9 @@ class BlogPostRepositoryImpl(BlogPostRepository):
     def uploadToS3(self, fileContent: str, filename: str):
         try:
             s3Client = S3Client.getInstance()  # 싱글턴 인스턴스 사용
-            fileUrl = s3Client.upload_file(fileContent, filename)  # 파일 업로드
-            return fileUrl
+            s3Filename = f"blog-post/{filename}"
+            fileUrl = s3Client.upload_file(fileContent, s3Filename)  # 파일 업로드
+            return filename
 
         except Exception as e:
             raise Exception(f"S3 업로드 실패: {str(e)}")

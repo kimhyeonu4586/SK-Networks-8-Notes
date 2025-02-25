@@ -5,5 +5,6 @@ export const boardState = () => ({
     board: null as Board | null,
 
     currentPage: 1,
-    totalPages: 0
-  })
+    totalPages: 0,
+    totalItems: 0,
+})

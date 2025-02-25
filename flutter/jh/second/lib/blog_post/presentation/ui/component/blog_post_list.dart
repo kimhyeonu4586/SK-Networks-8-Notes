@@ -37,23 +37,22 @@ class BlogPostList extends StatelessWidget {
               ),
             );
 
-            // if (result != null) {
-            //   final blogPostListProvider = Provider.of<BlogPostListProvider>(context, listen: false);
-            //
-            //   if (result['deleted'] == true) {
-            //     // 게시글 삭제 처리
-            //     blogPostListProvider.listBlogPosts(
-            //       blogPostListProvider.currentPage, // 현재 페이지 유지
-            //       6, // 고정된 perPage 값
-            //     );
-            //     // boardListProvider.removeBoard();
-            //   } else if (result['updatedBlogPost'] != null &&
-            //       result['updatedBlogPost'] is BlogPost) {
-            //     // 게시글 수정 처리
-            //     final updatedBlogPost = result['updatedBlogPost'] as BlogPost;
-            //     blogPostListProvider.updateBlogPost(updatedBlogPost);
-            //   }
-            // }
+            if (result != null) {
+              final blogPostListProvider = Provider.of<BlogPostListProvider>(context, listen: false);
+              if (result['deleted'] == true) {
+                // 게시글 삭제 처리
+                blogPostListProvider.listBlogPosts(
+                  blogPostListProvider.currentPage, // 현재 페이지 유지
+                  6, // 고정된 perPage 값
+                );
+                // boardListProvider.removeBoard();
+              } else if (result['updatedBlogPost'] != null &&
+                  result['updatedBlogPost'] is BlogPost) {
+                // 게시글 수정 처리
+                final updatedBlogPost = result['updatedBlogPost'] as BlogPost;
+                // blogPostListProvider.updateBlogPost(updatedBlogPost);
+              }
+            }
           }
         );
       })

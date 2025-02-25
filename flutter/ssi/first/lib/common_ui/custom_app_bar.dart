@@ -1,4 +1,5 @@
 import 'package:first/board/board_module.dart';
+import 'package:first/path_finder/path_finder_module.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -78,7 +79,19 @@ class CustomAppBar extends StatelessWidget {
                   ),
                 );
               },
-            )
+            ),
+            AppBarAction(
+                icon: Icons.map,
+                tooltip: 'Map',
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PathFinderModule.providePathFinderSearchMapPage(),
+                    ),
+                  );
+                },
+            ),
           ],
         ),
         Expanded(child: body)
