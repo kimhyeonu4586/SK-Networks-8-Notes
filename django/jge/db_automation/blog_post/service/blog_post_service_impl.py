@@ -141,6 +141,9 @@ class BlogPostServiceImpl(BlogPostService):
             if blogPost.writer.id != accountProfile.id:
                 raise ValueError("You are not authorized to modify this post.")
 
+            content = f"blog-post/{blogPost.content}"
+            self.__blogPostRepository.deleteFromS3(content)
+
             # 게시글 삭제 요청
             success = self.__blogPostRepository.deleteById(id)
             return success

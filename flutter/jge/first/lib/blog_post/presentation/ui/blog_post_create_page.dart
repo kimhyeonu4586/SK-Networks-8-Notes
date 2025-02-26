@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
-import 'package:first/blog_post/presentation/providers/blog_post_create_provider.dart';
-
+import '../../../utility/image_utility.dart';
+import '../providers/blog_post_create_provider.dart';
 
 class BlogPostCreatePage extends StatefulWidget {
   @override
@@ -28,6 +28,7 @@ class _BlogPostCreatePageState extends State<BlogPostCreatePage> {
       clipboardConfig: QuillClipboardConfig(
         enableExternalRichPaste: true,
         onImagePaste: (imageBytes) async {
+          print("onImagePaste()");
           if (kIsWeb) {
             return null;
           }
@@ -60,7 +61,7 @@ class _BlogPostCreatePageState extends State<BlogPostCreatePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Consumer<BlogPostCreateProvider>(
+        child: Consumer<BlogPostCreateProvider>( // BlogPostCreateProvider를 활용해 데이터 바인딩
           builder: (context, provider, child) {
             return Column(
               children: [
@@ -89,7 +90,25 @@ class _BlogPostCreatePageState extends State<BlogPostCreatePage> {
                       placeholder: '내용을 입력하세요...',
                       padding: EdgeInsets.all(8),
                       embedBuilders: [
-                        ...FlutterQuillEmbeds.editorBuilders(),
+                        ...FlutterQuillEmbeds.editorBuilders(
+                          imageEmbedConfig: QuillEditorImageEmbedConfig(
+                            imageProviderBuilder: (context, imageUrl) {
+                              print("이미지 URL: $imageUrl");
+
+                              // base64Image = ml.replaceAllMapped(
+                              //   RegExp(r'<img[^>]*\s+src="([^"]+)"[^>]*>'),
+                              //       (match) {
+                              //     String imageUrl = match.group(1)!;
+                              //     return convertImageToHtml(imageUrl);
+                              //   },
+                              // );
+                              //
+                              // provider.uploadBlogPostImage(base64Image)
+
+                              return FileImage(io.File(imageUrl)); // 로컬 파일로 이미지 로드
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -116,7 +135,16 @@ class _BlogPostCreatePageState extends State<BlogPostCreatePage> {
                     }
 
                     // Delta -> HTML 변환 후 S3 업로드
-                    String compressedHtml = provider.convertDeltaToHtml(contentJson);
+                    String compressedHtml = await provider.convertDeltaToHtml(contentJson);
+                    compressedHtml = compressedHtml.replaceAllMapped(
+                      RegExp(r'<img[^>]*\s+src="([^"]+)"[^>]*>'),
+                          (match) {
+                        String imageUrl = match.group(1)!;
+                        return convertImageToHtml(imageUrl);
+                      },
+                    );
+                    print("변환된 HTML: $compressedHtml");
+
                     final blogPost = await provider.createBlogPost(title, compressedHtml);
 
                     if (blogPost != null) {

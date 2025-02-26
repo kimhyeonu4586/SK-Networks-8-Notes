@@ -40,3 +40,13 @@ class S3Client:
             return file_url
         except Exception as e:
             raise Exception(f"파일 업로드 실패: {str(e)}")
+
+    def deleteFile(self, file_name: str):
+        try:
+            self.s3_client.delete_object(
+                Bucket=self.bucket_name,
+                Key=file_name
+            )
+            print(f"파일 '{file_name}' 삭제 성공")
+        except Exception as e:
+            raise Exception(f"S3에서 파일 삭제 실패: {str(e)}")

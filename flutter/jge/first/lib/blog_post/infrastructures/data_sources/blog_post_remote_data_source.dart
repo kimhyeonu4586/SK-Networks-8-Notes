@@ -8,10 +8,10 @@ class BlogPostRemoteDataSource {
   final String baseUrl;
 
   BlogPostRemoteDataSource(this.baseUrl);
-  
+
   Future<BlogPostListResponse> listBlogPost(int page, int perPage) async {
     final parsedUri =
-      Uri.parse('$baseUrl/blog-post/list?page=$page&perPage=$perPage');
+    Uri.parse('$baseUrl/blog-post/list?page=$page&perPage=$perPage');
 
     final boardListResponse = await http.get(parsedUri);
 
@@ -19,23 +19,23 @@ class BlogPostRemoteDataSource {
       final data = json.decode(boardListResponse.body);
 
       List<BlogPost> blogPostList = (data['dataList'] as List)
-        .map((data) => BlogPost(
+          .map((data) => BlogPost(
           id: data['id'] ?? 0,
           title: data['title'] ?? 'Untitled',
           content: '',
           nickname: data['nickname'] ?? '익명',
           createDate: data['createDate'] ?? 'Unknown'
-        )
       )
-      .toList();
+      )
+          .toList();
 
       int totalItems = parseInt(data['totalItems']);
       int totalPages = parseInt(data['totalPages']);
-      
+
       return BlogPostListResponse(
-        blogPostList: blogPostList,
-        totalItems: totalItems, 
-        totalPages: totalPages
+          blogPostList: blogPostList,
+          totalItems: totalItems,
+          totalPages: totalPages
       );
     } else {
       throw Exception('게시물 리스트 조회 실패');
@@ -67,12 +67,12 @@ class BlogPostRemoteDataSource {
   Future<BlogPost> create(String title, String content, String userToken) async {
     final url = Uri.parse('$baseUrl/blog-post/create');
     final response = await http.post(
-      url,
-      body: {
-        'title': title,
-        'content': content,
-        'userToken': userToken,
-      }
+        url,
+        body: {
+          'title': title,
+          'content': content,
+          'userToken': userToken,
+        }
     );
 
     if (response.statusCode == 200) {
@@ -93,13 +93,35 @@ class BlogPostRemoteDataSource {
   Future<BlogPost?> fetchBlogPost(int blogPostId) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/blog-post/read/$blogPostId'));
-      
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         return BlogPost.fromJson(data);
       }
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<String> uploadBlogPostImage(String imageContent, String userToken) async {
+    print("BlogPostRemoteDataSource uploadBlogPostImage() -> imageContent: $imageContent");
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/blog-post/upload-image'),
+      headers: {
+        'Content-Type': 'application/json', // JSON Content-Type 추가
+      },
+      body: jsonEncode({
+        'image': imageContent, // base64로 인코딩된 이미지 데이터
+        'userToken': userToken,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['imageUrl']; // 이미지 URL 반환
+    } else {
+      throw Exception('❌ Failed to upload image: ${response.body}');
     }
   }
 

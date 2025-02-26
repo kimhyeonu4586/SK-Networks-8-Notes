@@ -170,7 +170,7 @@ def startFineTuning():
     fileId = response.id
     fineTuneResponse = openai.fine_tuning.jobs.create(
         training_file=fileId,
-        model="gpt-3.5-turbo-0613",
+        model="gpt-3.5-turbo",
         hyperparameters={
             "n_epochs": 20
         }
@@ -205,7 +205,7 @@ class Query(BaseModel):
 
 @openaiFineTuningRouter.post("/chat")
 def chat_with_model(query: Query):
-    fine_tuned_model = "ft:gpt-3.5-turbo-0613:personal::A1P7BX3v"
+    fine_tuned_model = "ft:gpt-3.5-turbo-0125:personal::B1oTpT0K"
     response = openai.chat.completions.create(
         model=fine_tuned_model,
         messages=[{"role": "user", "content": query.text}]
