@@ -12,48 +12,65 @@ import os
 ganRouter = APIRouter()
 
 # 하이퍼파라미터 설정
+# 한 번에 128개의 데이터를 처리
 batch_size = 128
+# 생성자(Generator)의 입력으로 사용될 랜덤 벡터 크기
 latent_dim = 100
+# 데이터셋을 10번 반복하여 학습
 epochs = 10
+# CUDA(GPU) 사용 가능하면 GPU 아니면 CPU인데 우리 상황은 CPU고
+# 개인 노트북이나 pc에서는 GPU가 동작할 것임
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Generator 정의
+# Gan에서 Generator는 Random noise 값을 가지고 MNIST 숫자 이미지 (28 x 28)을 생성
+# 랜덤 벡터 노이즈를 받아 이미지 생성하는 신경망
 class Generator(nn.Module):
     def __init__(self):
         super(Generator, self).__init__()
         self.model = nn.Sequential(
+            # latent_dim 크기의 랜덤 노이즈를 입력 받아 28 x 28 크기의 이미지를 생성
             nn.Linear(latent_dim, 256),
+            # 활성 함수 ReLU()를 사용하여 비선형 변환을 적용
             nn.ReLU(),
             nn.Linear(256, 512),
             nn.ReLU(),
             nn.Linear(512, 1024),
             nn.ReLU(),
             nn.Linear(1024, 28 * 28),
+            # 마지막 층에 Tanh()를 사용하여 출력 값을 -1 ~ 1 사이로 정규화 (이미지 픽셀 값과 동일한 범주)
             nn.Tanh()
         )
 
+    # 입력 x를 신경망에 통과시켜 (1, 28, 28) 크기의 이미지로 변환
     def forward(self, x):
         return self.model(x).view(-1, 1, 28, 28)
 
 # Discriminator 정의
+# 이미지가 실제 데이터인지 생성된 가짜 데이터인지 판별하는 모델
 class Discriminator(nn.Module):
     def __init__(self):
         super(Discriminator, self).__init__()
+        # 입력 이미지 (28 x 28)을 1차원 벡터로 변환하여 판별
         self.model = nn.Sequential(
             nn.Linear(28 * 28, 1024),
+            # LeakyReLU(0.2)를 사용하여 음수 값도 일부 학습 가능하도록 만듬
             nn.LeakyReLU(0.2),
             nn.Linear(1024, 512),
             nn.LeakyReLU(0.2),
             nn.Linear(512, 256),
             nn.LeakyReLU(0.2),
             nn.Linear(256, 1),
+            # 마지막 층에서 Sigmoid()를 사용하여 출력 값을 0 ~ 1 사이로 변환 (0: fake, 1: real)
             nn.Sigmoid()
         )
 
+    # 입력 x를 1차원으로 펼쳐 신경망을 통과시킴
     def forward(self, x):
         return self.model(x.view(-1, 28 * 28))
 
 # ✅ 모델 초기화
+# 생성자(G)와 판별자(D) 모델을 생성하고 device(GPU 혹은 CPU)로 이동
 G = Generator().to(device)
 D = Discriminator().to(device)
 

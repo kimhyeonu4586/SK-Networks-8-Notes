@@ -10,6 +10,7 @@ class KakaoAuthProvider with ChangeNotifier {
   final FetchUserInfoUseCase fetchUserInfoUseCase;
   final RequestUserTokenUseCase requestUserTokenUseCase;
 
+  // Nuxt localStorage와 같은 역할
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
   String? _accessToken;

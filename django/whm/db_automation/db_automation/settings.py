@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+from django.conf.global_settings import CSRF_TRUSTED_ORIGINS
 from dotenv import load_dotenv
+import boto3
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -60,6 +62,8 @@ INSTALLED_APPS = [
     'payments',
     'orders',
     'board',
+    'image_gallery',
+    'blog_post',
 ]
 
 MIDDLEWARE = [
@@ -111,6 +115,18 @@ TOSS_PAYMENTS = {
     'TOSS_PAYMENTS_BASE_URL': os.getenv('TOSS_PAYMENTS_BASE_URL'),
     'TOSS_PAYMENTS_SECRET_KEY': os.getenv('TOSS_PAYMENTS_SECRET_KEY'),
 }
+
+AWS_REGION = os.getenv('AWS_REGION')
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
+
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_REGION
+)
 
 ROOT_URLCONF = "db_automation.urls"
 

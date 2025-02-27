@@ -5,7 +5,7 @@ from account_profile.entity.account_profile import AccountProfile
 
 
 class Board(models.Model):
-    board_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, blank=False, null=False)
     writer = models.ForeignKey(
         AccountProfile,

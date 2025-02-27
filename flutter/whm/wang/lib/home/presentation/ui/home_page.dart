@@ -2,6 +2,7 @@ import 'package:wang/common_ui/custom_app_bar.dart';
 import 'package:wang/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {

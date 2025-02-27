@@ -5,6 +5,7 @@ import os
 
 from config.cors_config import CorsConfig
 from convolution_neural_network.controller.cnn_controller import convolutionNeuralNetworkRouter
+from dcgan.controller.dcgan_controller import dcganRouter
 from ensemble_method.controller.ensemble_method_controller import ensembleMethodRouter
 from feature_engineering.controller.feature_engineering_controller import featureEngineeringRouter
 from game_data_fine_tuning.controller.gdft_controller import gameDataFineTuningRouter
@@ -41,6 +42,7 @@ app.include_router(openAiBasicRouter)
 app.include_router(gameDataFineTuningRouter)
 app.include_router(openaiFineTuningRouter)
 app.include_router(ganRouter)
+app.include_router(dcganRouter)
 
 # HOST는 모두에 열려 있고
 # FASTAPI_PORT를 통해서 이 서비스가 구동되는 포트 번호를 지정
