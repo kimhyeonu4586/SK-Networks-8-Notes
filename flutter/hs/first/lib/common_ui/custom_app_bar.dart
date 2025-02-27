@@ -1,4 +1,5 @@
 import 'package:first/board/board_module.dart';
+import 'package:first/path_finder/path_finder_module.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -78,7 +79,20 @@ class CustomAppBar extends StatelessWidget {
                   ),
                 );
               },
-            )
+            ),
+            AppBarAction(
+              icon: Icons.map,
+              tooltip: 'Map',
+              onPressed: () {
+                // 지도 페이지로 이동하는 코드 작성
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PathFinderModule.providePathFinderSearchMapPage(),  // 지도 페이지로 이동
+                  ),
+                );
+              },
+            ),
           ],
         ),
         Expanded(child: body)

@@ -50,6 +50,8 @@ dependencies:
   aws_sdk_flutter: ^0.0.1-dev.1
   webview_flutter: ^4.9.0
   webview_flutter_wkwebview: ^3.18.2
+  geolocator: ^13.0.2
+  sensors_plus: ^6.1.1
 #  kakao_map_plugin: ^0.3.2
 
 dev_dependencies:
